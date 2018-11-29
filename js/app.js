@@ -2,6 +2,7 @@
 var btnActualizar = document.getElementById('btnActualizar');
 var btnGuardar = document.getElementById('btnGuardar');
 
+
 //aregar un listener al boton
 btnActualizar.addEventListener('click',actualizar);
 btnGuardar.addEventListener('click', guardar);
@@ -69,10 +70,17 @@ function actualizar()
             + student.first_name
             + "</td><td>"
             + student.last_name
-            + "</td><td><button idstudent=\"" + student.last_name
-            + "\" class=\"borrar\">&#9003; Borrar </button>"
+            + "</td><td><button idstudent=\"" + student.id
+            + "\" class=\"eliminar\">&#9003; Borrar </button>"
             + "</td></tr>";
           document.getElementsByTagName('tbody')[0].innerHTML += html;
+          var botonesEliminar = document.getElementsByClassName('eliminar');
+          for (i=0 ; i<botonesEliminar.length ; i++)
+          {
+            console.log("x");
+            botonesEliminar[i].addEventListener('click', eliminarUsuario(response.students[i]));
+          }
+
 
         });
 
@@ -81,4 +89,25 @@ function actualizar()
   };
 xhttp.open("GET","http://nyc.pixan.io/ajax/public/api/students", true);
 xhttp.send();
+}
+function eliminarUsuario(event)
+{
+  /*
+  var data = new FormData();
+  data.append('_method','DELETE');
+  */
+
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function()
+  {
+    if( this.readyState==4 && this.status==200 )
+    {
+      console.log("y");
+      //alert("se elimio ");
+      event.target.parentNode.parentNode.parentNode.removeChild(event.target.parentNode.parentNode);
+    }
+    xhr.open("DELETE","http://nyc.pixan.io/ajax/public/api/students/"+student.id, true);
+    xhr.send();
+  };
+
 }
